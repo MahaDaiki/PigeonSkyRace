@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      #uri: mongodb+srv://yourname:<dbpassword>@cluster0.qbzct.mongodb.net/databasename?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://maha:<dbpassword>@cluster0.qbzct.mongodb.net/PigeonSkyRace?retryWrites=true&w=majority&appName=Cluster0
