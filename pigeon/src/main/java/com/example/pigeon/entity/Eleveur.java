@@ -40,8 +40,8 @@ public class Eleveur extends Utilisateur {
     public Eleveur() {
         super();
     }
-    public Eleveur(String nom ,String motDePasse,String nomColombier, double latitude, double longitude, List<Pigeon> pigeons ) {
-        super(nom, motDePasse);
+    public Eleveur(String username ,String motDePasse,String nomColombier, double latitude, double longitude, List<Pigeon> pigeons ) {
+        super(username, motDePasse);
 
         this.nomColombier = nomColombier;
         this.latitude = latitude;
