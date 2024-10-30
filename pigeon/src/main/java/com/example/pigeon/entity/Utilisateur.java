@@ -24,7 +24,7 @@ public class Utilisateur {
     @Setter
     @NotBlank(message = "Le nom d'utilisateur ne peut pas être vide")
     @Indexed(unique = true)
-    private String nom;
+    private String username;
 
 
     @Getter
@@ -34,8 +34,8 @@ public class Utilisateur {
 
     public Utilisateur() {}
 
-    public Utilisateur( String nom, String motDePasse) {
-    this.nom = nom;
+    public Utilisateur( String username, String motDePasse) {
+    this.username = username;
     this.motDePasse = motDePasse;
     }
 

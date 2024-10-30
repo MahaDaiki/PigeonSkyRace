@@ -1,11 +1,11 @@
 spring:
   data:
     mongodb:
-    uri: mongodb+srv://salma:123@cluster0.qbzct.mongodb.net/PigeonSkyRace?retryWrites=true&w=majority&appName=Cluster0
-#    uri: mongodb+srv://maha:dbpassword@cluster0.qbzct.mongodb.net/PigeonSkyRace?retryWrites=true&w=majority&appName=Cluster0
+      uri : mongodb://localhost:27017/PigeonSkyRace
 server:
   port: 8080
 
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
+
