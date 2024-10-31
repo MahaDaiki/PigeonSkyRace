@@ -1,25 +1,52 @@
 package com.example.pigeon.controller;
 
-import com.example.pigeon.entity.Eleveur;
-import com.example.pigeon.service.EleveurService;
+import com.example.pigeon.dto.LoginRequestDto;
+import com.example.pigeon.entity.Utilisateur;
+import com.example.pigeon.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
-    private EleveurService eleveurService;
+    private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Eleveur> registerUtilisateur(@RequestBody Eleveur user) {
-        Eleveur registeredEleveur = eleveurService.registerEleveur(user);
+    public ResponseEntity<Utilisateur> registerUtilisateur(@RequestBody Utilisateur user) {
+        Utilisateur registeredEleveur = userService.registerUtilisateur(user);
         return new ResponseEntity<>(registeredEleveur, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequest, HttpSession session) {
+        String username = loginRequest.getUsername();
+        String motDePasse = loginRequest.getMotDePasse();
+
+        if (username == null || motDePasse == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nom d'utilisateur ou mot de passe manquant");
+        }
+
+        Utilisateur utilisateur = userService.findByUsernameAndMotDePasse(username, motDePasse);
+
+        if (utilisateur != null) {
+            session.setAttribute("utilisateurId", utilisateur.getId());
+            session.setAttribute("username", utilisateur.getUsername());
+            return ResponseEntity.ok("Connexion réussie");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d'utilisateur ou mot de passe incorrect");
+        }
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Déconnexion réussie");
     }
 
 }
