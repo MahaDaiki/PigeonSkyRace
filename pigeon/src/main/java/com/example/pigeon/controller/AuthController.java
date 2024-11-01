@@ -36,6 +36,7 @@ public class AuthController {
         if (utilisateur != null) {
             session.setAttribute("utilisateurId", utilisateur.getId());
             session.setAttribute("username", utilisateur.getUsername());
+            session.setAttribute("utilisateurRole", utilisateur.getRole());
             return ResponseEntity.ok("Connexion réussie");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d'utilisateur ou mot de passe incorrect");
