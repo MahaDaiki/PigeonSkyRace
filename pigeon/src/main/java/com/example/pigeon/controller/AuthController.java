@@ -1,6 +1,7 @@
 package com.example.pigeon.controller;
 
 import com.example.pigeon.dto.LoginRequestDto;
+import com.example.pigeon.dto.UtilisateurDto;
 import com.example.pigeon.entity.Utilisateur;
 import com.example.pigeon.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -17,9 +18,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Utilisateur> registerUtilisateur(@RequestBody Utilisateur user) {
-        Utilisateur registeredEleveur = userService.registerUtilisateur(user);
-        return new ResponseEntity<>(registeredEleveur, HttpStatus.CREATED);
+    public ResponseEntity<UtilisateurDto> registerUtilisateur(@RequestBody UtilisateurDto user) {
+        UtilisateurDto registeredUtilisateur = userService.registerUtilisateur(user);
+        return new ResponseEntity<>(registeredUtilisateur, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
