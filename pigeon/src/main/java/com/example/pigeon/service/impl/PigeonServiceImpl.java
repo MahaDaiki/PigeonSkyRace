@@ -3,6 +3,7 @@ package com.example.pigeon.service.impl;
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.repository.PigeonRepository;
 import com.example.pigeon.service.PigeonService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,4 +31,11 @@ public class PigeonServiceImpl implements PigeonService {
     public List<Pigeon> getPigeonsByUserId(String eleveurId) {
         return pigeonRepository.findByEleveurId(eleveurId);
     }
+
+    @Override
+    public List<Pigeon> getPigeonsByIds(List<String> pigeonIds) {
+        return pigeonRepository.findAllById(pigeonIds);
+    }
+
+
 }
