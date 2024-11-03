@@ -2,6 +2,7 @@ package com.example.pigeon.controller;
 
 
 import com.example.pigeon.dto.CompetitionDto;
+import com.example.pigeon.dto.CompetitionRequestDto;
 import com.example.pigeon.entity.Competition;
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.entity.Role;
@@ -12,10 +13,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,22 +59,66 @@ public class CompetitionController {
         }
 
 
-        Competition competition = new Competition();
-        competition.setNomCourse(competitionDto.getNomCourse());
-        competition.setLatitudeLacher(competitionDto.getLatitudeLacher());
-        competition.setLongitudeLacher(competitionDto.getLongitudeLacher());
-        competition.setDateHeureDepart(competitionDto.getDateHeureDepart());
-        competition.setDistancePrevisionnelle(competitionDto.getDistancePrevisionnelle());
-        competition.setSeason(competitionDto.getSeason());
-        competition.setEstTermine(competitionDto.getEstTermine());
+        Competition competition = competitionDto.toEntity();
         competition.setPigeons(existingPigeons);
 
-        // Save the competition
-        competitionService.addCompetition(competition);
+        CompetitionDto savedCompetitionDto = competitionService.addCompetition(competitionDto);
         return ResponseEntity.ok("Compétition ajoutée avec succès");
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CompetitionDto> getCompetitionById(@PathVariable String id) {
+        CompetitionDto competitionDto = competitionService.getCompetitionById(id);
+        if (competitionDto != null) {
+            return ResponseEntity.ok(competitionDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> modifyStatus(
+            @PathVariable String id,
+            @RequestBody CompetitionRequestDto requestDto,
+            HttpSession session) {
+
+
+        System.out.println("Received request to update status for competition ID: " + id + " with estTermine: " + requestDto.getEstTermine());
+
+
+        String userId = (String) session.getAttribute("utilisateurId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
+        }
+
+        Role role = (Role) session.getAttribute("utilisateurRole");
+        if (role != Role.organisateur) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
+        }
+
+
+        Boolean estTermine = requestDto.getEstTermine();
+        System.out.println("Updating status for competition ID: " + id + " to estTermine: " + estTermine);
+
+        CompetitionDto updatedCompetition = competitionService.modifyStatus(id, estTermine);
+        if (updatedCompetition != null) {
+            return ResponseEntity.ok("Statut de la compétition mis à jour avec succès");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Compétition non trouvée");
+        }
+    }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 package com.example.pigeon.dto;
 
+import com.example.pigeon.entity.Competition;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -36,4 +38,40 @@ public class CompetitionDto {
 
     @JsonProperty("pigeons")
     private List<String> pigeonIds;
+
+    public static CompetitionDto toDto(Competition entity) {
+        CompetitionDto dto = new CompetitionDto();
+        dto.setId(entity.getId());
+        dto.setNomCourse(entity.getNomCourse());
+        dto.setLatitudeLacher(entity.getLatitudeLacher());
+        dto.setLongitudeLacher(entity.getLongitudeLacher());
+        dto.setDateHeureDepart(entity.getDateHeureDepart());
+        dto.setDistancePrevisionnelle(entity.getDistancePrevisionnelle());
+        dto.setSeason(entity.getSeason());
+        dto.setEstTermine(entity.getEstTermine());
+        dto.setPigeonIds(entity.getPigeons() != null
+                ? entity.getPigeons().stream()
+                .map(pigeon -> pigeon.getId())
+                .collect(Collectors.toList())
+                : null);
+        return dto;
+    }
+
+    public Competition toEntity() {
+        Competition competition = new Competition();
+        competition.setId(this.id);
+        competition.setNomCourse(this.nomCourse);
+        competition.setLatitudeLacher(this.latitudeLacher);
+        competition.setLongitudeLacher(this.longitudeLacher);
+        competition.setDateHeureDepart(this.dateHeureDepart);
+        competition.setDistancePrevisionnelle(this.distancePrevisionnelle);
+        competition.setSeason(this.season);
+        competition.setEstTermine(this.estTermine);
+
+        return competition;
+    }
+
+    public void setMessage(String s) {
+
+    }
 }
