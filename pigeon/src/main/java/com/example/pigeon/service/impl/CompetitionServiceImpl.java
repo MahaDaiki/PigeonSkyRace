@@ -22,17 +22,30 @@ public class CompetitionServiceImpl implements CompetitionService {
     private PigeonService pigeonService;
 
     @Override
-    public Competition addCompetition(Competition competition) {
-        return competitionRepository.save(competition);
+    public CompetitionDto addCompetition(CompetitionDto competitionDto) {
+        Competition competition = competitionDto.toEntity();
+        Competition savedCompetition = competitionRepository.save(competition);
+        return CompetitionDto.toDto(savedCompetition);
     }
 
     @Override
-    public Competition getCompetitionById(String id) {
-        return null;
+    public CompetitionDto getCompetitionById(String id) {
+        Competition competition = competitionRepository.findById(id).orElse(null);
+        return competition != null ? CompetitionDto.toDto(competition) : null;
     }
 
+
     @Override
-    public Competition modifyStatus(String id, Boolean estTermine) {
-        return null;
+    public CompetitionDto modifyStatus(String id, Boolean estTermine) {
+        try {
+            Competition competition = competitionRepository.findById(id).orElseThrow(() -> new RuntimeException("Competition not found with id: " + id));
+            competition.setEstTermine(estTermine);
+            Competition updatedCompetition = competitionRepository.save(competition);
+            return CompetitionDto.toDto(updatedCompetition);
+        } catch (Exception e) {
+            System.err.println("Error modifying competition status: " + e.getMessage());
+            return null;
+        }
     }
+
 }
