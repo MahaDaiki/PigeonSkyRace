@@ -1,6 +1,7 @@
 package com.example.pigeon.dto;
 
 import com.example.pigeon.entity.Resultat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ public class ResultatDto {
         private double distanceParcourue;
         private double vitesse;
         private Date tempsParcourue;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
         private Date heureArrivee;
         private int point;
 

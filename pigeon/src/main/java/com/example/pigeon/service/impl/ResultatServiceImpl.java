@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,29 +25,30 @@ public class ResultatServiceImpl implements ResultatService {
 
 
     @Override
-    public List<ResultatDto> createResultsForCompetition(String competitionId) {
+    public List<ResultatDto> createResultsForCompetition(String competitionId, List<ResultatDto> resultatDtos) {
         Competition competition = competitionRepository.findById(competitionId).orElse(null);
         if (competition == null || competition.getPigeons() == null) {
             return new ArrayList<>();
         }
 
-        List<ResultatDto> resultatDtos = new ArrayList<>();
-        for (Pigeon pigeon : competition.getPigeons()) {
+        List<ResultatDto> createdResults = new ArrayList<>();
+        for (ResultatDto resultatDto : resultatDtos) {
             Resultat resultat = new Resultat();
             resultat.setCompetitionId(competitionId);
-            resultat.setPigeonId(pigeon.getId());
+            resultat.setPigeonId(resultatDto.getPigeonId());
             resultat.setDistanceParcourue(0);
             resultat.setVitesse(0);
             resultat.setTempsParcourue(null);
-            resultat.setHeureArrivee(null);
+            resultat.setHeureArrivee(resultatDto.getHeureArrivee());
             resultat.setPoint(0);
 
             Resultat savedResultat = resultatRepository.save(resultat);
-            resultatDtos.add(ResultatDto.toDto(savedResultat));
+            createdResults.add(ResultatDto.toDto(savedResultat));
         }
 
-        return resultatDtos;
+        return createdResults;
     }
+
 
     @Override
     public List<ResultatDto> getResultsByCompetitionId(String competitionId) {
