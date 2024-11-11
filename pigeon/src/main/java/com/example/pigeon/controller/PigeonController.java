@@ -1,5 +1,6 @@
 package com.example.pigeon.controller;
 
+import com.example.pigeon.dto.PigeonDto;
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.entity.Role;
 import com.example.pigeon.service.PigeonService;
@@ -19,7 +20,7 @@ public class PigeonController {
     private PigeonService pigeonService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addPigeon(@RequestBody Pigeon pigeon, HttpSession session) {
+    public ResponseEntity<String> addPigeon(@RequestBody PigeonDto pigeonDto, HttpSession session) {
 
 
         String userId = (String) session.getAttribute("utilisateurId");
@@ -36,9 +37,9 @@ public class PigeonController {
         if (role != Role.eleveur) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'eleveur' requis");
         }
-
+        Pigeon pigeon = pigeonDto.toEntity();
         pigeon.setEleveurId(userId);
-        pigeonService.addPigeon(pigeon);
+        pigeonService.addPigeon(PigeonDto.toDto(pigeon));
         return ResponseEntity.ok("Pigeon ajouté avec succès");
     }
 
