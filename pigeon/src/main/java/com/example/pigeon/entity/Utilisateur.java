@@ -1,8 +1,10 @@
 package com.example.pigeon.entity;
 
 
+import com.example.pigeon.dto.UtilisateurDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Getter
 @Data
+@Builder
 @Document(collection = "utilisateurs")
 public class Utilisateur {
 
@@ -59,7 +62,8 @@ public class Utilisateur {
 
     public Utilisateur() {}
 
-    public Utilisateur( String username, String motDePasse, String nom, double latitude, double longitude, Role role, List<Pigeon> pigeons) {
+    public Utilisateur(String id, String username, String motDePasse, String nom, double latitude, double longitude, Role role, List<Pigeon> pigeons) {
+        this.id = id;
         this.username = username;
         this.motDePasse = motDePasse;
         this.nom = nom;
@@ -68,7 +72,5 @@ public class Utilisateur {
         this.role = role;
         this.pigeons = pigeons;
     }
-
-
 
 }
