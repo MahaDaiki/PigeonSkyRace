@@ -1,5 +1,6 @@
 package com.example.pigeon.service.impl;
 
+import com.example.pigeon.dto.PigeonDto;
 import com.example.pigeon.entity.Pigeon;
 import com.example.pigeon.repository.PigeonRepository;
 import com.example.pigeon.service.PigeonService;
@@ -17,9 +18,9 @@ public class PigeonServiceImpl implements PigeonService {
     private PigeonRepository pigeonRepository;
 
     @Override
-    public Pigeon addPigeon(Pigeon pigeon) {
-
-        return pigeonRepository.save(pigeon);
+    public PigeonDto addPigeon(PigeonDto pigeonDto) {
+        Pigeon pigeon = pigeonDto.toEntity();
+        return PigeonDto.toDto(pigeonRepository.save(pigeon));
     }
 
     @Override
