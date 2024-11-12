@@ -1,20 +1,21 @@
 package com.example.pigeon.dto;
 
 import com.example.pigeon.entity.Competition;
+import com.example.pigeon.entity.Pigeon;
+import com.example.pigeon.service.PigeonService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class CompetitionDto {
     private String id;
 
@@ -57,7 +58,7 @@ public class CompetitionDto {
         return dto;
     }
 
-    public Competition toEntity() {
+    public Competition toEntity(List<Pigeon> existingPigeons) {
         Competition competition = new Competition();
         competition.setId(this.id);
         competition.setNomCourse(this.nomCourse);
@@ -67,6 +68,12 @@ public class CompetitionDto {
         competition.setDistancePrevisionnelle(this.distancePrevisionnelle);
         competition.setSeason(this.season);
         competition.setEstTermine(this.estTermine);
+
+        if (this.pigeonIds != null) {
+            competition.setPigeons(existingPigeons);
+        } else {
+            competition.setPigeons(new ArrayList<>());
+        }
 
         return competition;
     }
