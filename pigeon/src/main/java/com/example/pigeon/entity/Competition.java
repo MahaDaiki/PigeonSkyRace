@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class Competition {
     @Getter
     @Setter
     @NotNull(message = "La date et l'heure de départ ne peuvent pas être nulles")
-    private Date dateHeureDepart;
+    private LocalDateTime dateHeureDepart;
 
     @Getter
     @Setter
@@ -61,7 +61,7 @@ public class Competition {
 
     public Competition() {}
 
-    public Competition(String nomCourse, double latitudeLacher, double longitudeLacher, Date dateHeureDepart, double distancePrevisionnelle,String season, Boolean estTermine ,List<Pigeon> pigeons) {
+    public Competition(String nomCourse, double latitudeLacher, double longitudeLacher, LocalDateTime dateHeureDepart, double distancePrevisionnelle, String season, Boolean estTermine , List<Pigeon> pigeons) {
         this.nomCourse = nomCourse;
         this.latitudeLacher = latitudeLacher;
         this.longitudeLacher = longitudeLacher;

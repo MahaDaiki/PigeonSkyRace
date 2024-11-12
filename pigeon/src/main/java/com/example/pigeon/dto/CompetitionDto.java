@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ public class CompetitionDto {
     private double longitudeLacher;
 
     @NotNull(message = "La date et l'heure de départ ne peuvent pas être nulles")
-    private Date dateHeureDepart;
+    private LocalDateTime dateHeureDepart;
 
     @NotNull(message = "La distance prévisionnelle ne peut pas être nulle")
     private double distancePrevisionnelle;

@@ -1,7 +1,10 @@
 package com.example.pigeon.controller;
 
+import com.example.pigeon.dto.CompetitionDto;
+import com.example.pigeon.dto.CompetitionRequestDto;
 import com.example.pigeon.dto.ResultatDto;
 import com.example.pigeon.entity.Role;
+import com.example.pigeon.service.CalculService;
 import com.example.pigeon.service.ResultatService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +24,9 @@ public class ResultatController {
 
     @Autowired
     private ResultatService resultatService;
+
+    @Autowired
+    private CalculService calculService;
 
 
     @PostMapping("/{competitionId}")
@@ -61,4 +68,29 @@ public class ResultatController {
         }
         return new ResponseEntity<>(resultats, HttpStatus.OK);
     }
+
+
+    @PatchMapping("/cloture/{competitionId}")
+    public ResponseEntity<String> cloturerCompetition(@PathVariable String competitionId, HttpSession session) {
+        // System.out.println("salma");
+        String userId = (String) session.getAttribute("utilisateurId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié");
+        }
+
+        Role role = (Role) session.getAttribute("utilisateurRole");
+        if (role != Role.organisateur) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accès refusé : rôle 'organisateur' requis");
+        }
+
+
+        boolean success = calculService.cloturerCompetitionEtCalculer(competitionId);
+        if (success) {
+            return ResponseEntity.ok("Compétition clôturée avec succès, calculs appliqués.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erreur lors de la clôture de la compétition.");
+        }
+    }
+
+
 }
