@@ -4,6 +4,8 @@ import com.example.pigeon.entity.Resultat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 @Data
 @NoArgsConstructor
@@ -18,9 +20,9 @@ public class ResultatDto {
         private String pigeonId;
         private double distanceParcourue;
         private double vitesse;
-        private Date tempsParcourue;
+        private Duration tempsParcourue;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
-        private Date heureArrivee;
+        private LocalDateTime heureArrivee;
         private int point;
 
 
