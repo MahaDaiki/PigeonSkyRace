@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+
 public class CompetitionDto {
     private String id;
 
@@ -39,6 +40,8 @@ public class CompetitionDto {
 
     @JsonProperty("pigeons")
     private List<String> pigeonIds;
+
+
 
     public static CompetitionDto toDto(Competition entity) {
         CompetitionDto dto = new CompetitionDto();
