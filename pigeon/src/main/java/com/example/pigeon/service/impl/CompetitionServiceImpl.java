@@ -23,9 +23,21 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionDto addCompetition(CompetitionDto competitionDto) {
-        Competition competition = competitionDto.toEntity();
-        Competition savedCompetition = competitionRepository.save(competition);
-        return CompetitionDto.toDto(savedCompetition);
+        List<String> pigeonIds = competitionDto.getPigeonIds();
+        if (pigeonIds != null && !pigeonIds.isEmpty()) {
+            List<Pigeon> existingPigeons = pigeonService.getPigeonsByIds(pigeonIds);
+
+            if (existingPigeons.size() != pigeonIds.size()) {
+                throw new IllegalArgumentException("Un ou plusieurs IDs de pigeon sont invalides");
+            }
+
+            Competition competition = competitionDto.toEntity(existingPigeons);
+
+            Competition savedCompetition = competitionRepository.save(competition);
+            return CompetitionDto.toDto(savedCompetition);
+        } else {
+            throw new IllegalArgumentException("La liste des IDs de pigeon est vide");
+        }
     }
 
     @Override

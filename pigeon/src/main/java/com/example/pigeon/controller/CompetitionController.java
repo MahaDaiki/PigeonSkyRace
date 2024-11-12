@@ -59,8 +59,9 @@ public class CompetitionController {
         }
 
 
-        Competition competition = competitionDto.toEntity();
-        competition.setPigeons(existingPigeons);
+        Competition competition = competitionDto.toEntity(existingPigeons);
+
+        System.out.println("Competition with pigeons: " + competition);
 
         CompetitionDto savedCompetitionDto = competitionService.addCompetition(competitionDto);
         return ResponseEntity.ok("Compétition ajoutée avec succès");
