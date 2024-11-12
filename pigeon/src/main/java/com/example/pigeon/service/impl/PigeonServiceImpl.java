@@ -20,6 +20,13 @@ public class PigeonServiceImpl implements PigeonService {
     @Override
     public PigeonDto addPigeon(PigeonDto pigeonDto) {
         Pigeon pigeon = pigeonDto.toEntity();
+        if (pigeon.getAge() <= 0) {
+            throw new IllegalArgumentException("L'âge doit être supérieur à 0");
+        }
+        if (!pigeon.getNumeroBague().toLowerCase().startsWith("m") &&
+                !pigeon.getNumeroBague().toLowerCase().startsWith("f")) {
+            throw new IllegalArgumentException("Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle");
+        }
         return PigeonDto.toDto(pigeonRepository.save(pigeon));
     }
 

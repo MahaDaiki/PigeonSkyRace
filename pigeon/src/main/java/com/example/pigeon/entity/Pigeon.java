@@ -3,6 +3,7 @@ package com.example.pigeon.entity;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Pigeon {
     @Getter
     @Setter
     @NotBlank(message = "Le numéro de bague ne peut pas être vide")
+    @Pattern(regexp = "^[mf].*", message = "Le numéro de bague doit commencer par 'm' pour mâle ou 'f' pour femelle")
     private String numeroBague;
 
     @Getter
@@ -48,5 +50,6 @@ public class Pigeon {
         this.eleveurId = eleveurId;
 
     }
+
 
 }
