@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ class CompetitionServiceImplTest {
         competitionDto.setNomCourse("Competition 1");
         competitionDto.setLatitudeLacher(10.123);
         competitionDto.setLongitudeLacher(20.456);
-        competitionDto.setDateHeureDepart(new Date());
+        competitionDto.setDateHeureDepart(LocalDateTime.now().plusDays(1));
         competitionDto.setDistancePrevisionnelle(500);
         competitionDto.setSeason("2024");
         competitionDto.setEstTermine(false);
@@ -61,7 +62,7 @@ class CompetitionServiceImplTest {
                 "Competition 1",
                 10.123,
                 20.456,
-                new Date(),
+                LocalDateTime.now().plusDays(1),
                 500,
                 "2024",
                 false,
@@ -74,7 +75,7 @@ class CompetitionServiceImplTest {
         when(pigeonService.getPigeonsByIds(Arrays.asList("pigeon1", "pigeon2"))).thenReturn(Arrays.asList(pigeon1, pigeon2));
         when(competitionRepository.save(any(Competition.class))).thenReturn(competition);
 
-        competitionDto.setDateHeureDepart(new Date(System.currentTimeMillis() + 100000)); // 100000ms in the future
+        competitionDto.setDateHeureDepart(LocalDateTime.now().plusMinutes(10));
 
         CompetitionDto result = competitionService.addCompetition(competitionDto);
 
