@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class CompetitionServiceImpl implements CompetitionService {
                 throw new IllegalArgumentException("Longitude doit être entre -180 et 180");
             }
 
-            if (competitionDto.getDateHeureDepart().before(new Date())) {
+             if (competitionDto.getDateHeureDepart().isBefore(LocalDateTime.now())) {
                 throw new IllegalArgumentException("La date et l'heure de départ doivent être dans le futur");
             }
 

@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 
 @Data
 @Document(collection = "resultats")
@@ -39,11 +41,11 @@ public class Resultat {
 
     @Getter
     @Setter
-    private Date tempsParcourue;
+    private Duration tempsParcourue;
 
     @Getter
     @Setter
-    private Date heureArrivee;
+    private LocalDateTime heureArrivee;
 
     @Getter
     @Setter
@@ -52,7 +54,7 @@ public class Resultat {
 
     public Resultat() {}
 
-    public Resultat(String competitionId, String pigeonId, double distanceParcourue, double vitesse, Date tempsParcourue, Date heureArrivee, int point) {
+    public Resultat(String competitionId, String pigeonId, double distanceParcourue, double vitesse, Duration tempsParcourue, LocalDateTime heureArrivee, int point) {
         this.competitionId = competitionId;
         this.pigeonId = pigeonId;
         this.distanceParcourue = distanceParcourue;
