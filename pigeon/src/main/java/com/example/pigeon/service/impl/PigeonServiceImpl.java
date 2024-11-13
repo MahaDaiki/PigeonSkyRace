@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -63,6 +64,11 @@ public class PigeonServiceImpl implements PigeonService {
     @Override
     public List<Pigeon> getPigeonsByIds(List<String> pigeonIds) {
         return pigeonRepository.findAllById(pigeonIds);
+    }
+
+    @Override
+    public Optional<Pigeon> findPigeonByNumeroBague(String numeroBague) {
+        return pigeonRepository.findByNumeroBague(numeroBague);
     }
 
 

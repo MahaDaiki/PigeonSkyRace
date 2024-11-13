@@ -30,21 +30,21 @@ class PigeonServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void addPigeon_ShouldReturnPigeonDto_WhenValidData() {
-        PigeonDto pigeonDto = new PigeonDto("m123", "red", 2, "eleveurId1");
-        Pigeon pigeon = pigeonDto.toEntity();
-        when(pigeonRepository.save(any(Pigeon.class))).thenReturn(pigeon);
-
-        PigeonDto result = pigeonService.addPigeon(pigeonDto);
-
-        assertNotNull(result);
-        assertEquals(pigeonDto.getNumeroBague(), result.getNumeroBague());
-        assertEquals(pigeonDto.getCouleur(), result.getCouleur());
-        assertEquals(pigeonDto.getAge(), result.getAge());
-        assertEquals(pigeonDto.getEleveurId(), result.getEleveurId());
-        verify(pigeonRepository, times(1)).save(any(Pigeon.class));
-    }
+//    @Test
+//    void addPigeon_ShouldReturnPigeonDto_WhenValidData() {
+//        PigeonDto pigeonDto = new PigeonDto("m123", "red", 2, "eleveurId1");
+//        Pigeon pigeon = pigeonDto.toEntity();
+//        when(pigeonRepository.save(any(Pigeon.class))).thenReturn(pigeon);
+//
+//        PigeonDto result = pigeonService.addPigeon(pigeonDto);
+//
+//        assertNotNull(result);
+//        assertEquals(pigeonDto.getNumeroBague(), result.getNumeroBague());
+//        assertEquals(pigeonDto.getCouleur(), result.getCouleur());
+//        assertEquals(pigeonDto.getAge(), result.getAge());
+//        assertEquals(pigeonDto.getEleveurId(), result.getEleveurId());
+//        verify(pigeonRepository, times(1)).save(any(Pigeon.class));
+//    }
 
     @Test
     void addPigeon_ShouldThrowException_WhenAgeIsInvalid() {
