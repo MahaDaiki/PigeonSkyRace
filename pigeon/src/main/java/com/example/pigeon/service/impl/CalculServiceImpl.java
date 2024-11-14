@@ -57,6 +57,29 @@ public class CalculServiceImpl implements CalculService {
                 resultatRepository.save(resultat);
             });
 
+            resultats.sort((r1, r2) -> r1.getHeureArrivee().compareTo(r2.getHeureArrivee()));
+
+            int totalPigeons = resultats.size();
+            int admissionCount = (int) Math.ceil(totalPigeons * DEFAULT_ADMISSION_PERCENTAGE);
+
+            int[] rank = {1};
+            resultats.stream()
+                    .limit(admissionCount)
+                    .forEach(resultat -> {
+                        resultat.setClassement(rank[0]);
+
+                        double point;
+                        if (rank[0] == 1) {
+                            point = 100;
+                        } else {
+                            point = 100 - ((double) (rank[0] - 1) / (admissionCount - 1)) * 100;
+                        }
+                        resultat.setPoint(point);
+
+                        resultatRepository.save(resultat);
+                        rank[0]++;
+                    });
+
             competition.setEstTermine(true);
             competitionRepository.save(competition);
 
