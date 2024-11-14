@@ -49,12 +49,16 @@ public class Resultat {
 
     @Getter
     @Setter
-    private int point;
+    private double point;
+
+    @Getter
+    @Setter
+    private int classement;
 
 
     public Resultat() {}
 
-    public Resultat(String competitionId, String pigeonId, double distanceParcourue, double vitesse, Duration tempsParcourue, LocalDateTime heureArrivee, int point) {
+    public Resultat(String competitionId, String pigeonId, double distanceParcourue, double vitesse, Duration tempsParcourue, LocalDateTime heureArrivee, double point, int classement) {
         this.competitionId = competitionId;
         this.pigeonId = pigeonId;
         this.distanceParcourue = distanceParcourue;
@@ -62,5 +66,6 @@ public class Resultat {
         this.tempsParcourue = tempsParcourue;
         this.heureArrivee = heureArrivee;
         this.point = point;
+        this.classement = classement;
     }
 }

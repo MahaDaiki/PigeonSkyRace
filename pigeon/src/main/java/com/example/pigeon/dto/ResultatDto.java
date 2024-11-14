@@ -23,7 +23,8 @@ public class ResultatDto {
         private Duration tempsParcourue;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
         private LocalDateTime heureArrivee;
-        private int point;
+        private double point;
+        private int classement;
 
 
     public static ResultatDto toDto(Resultat entity) {
@@ -36,6 +37,7 @@ public class ResultatDto {
                 .tempsParcourue(entity.getTempsParcourue())
                 .heureArrivee(entity.getHeureArrivee())
                 .point(entity.getPoint())
+                .classement(entity.getClassement())
                 .build();
     }
 
@@ -49,6 +51,7 @@ public class ResultatDto {
         resultat.setTempsParcourue(this.tempsParcourue);
         resultat.setHeureArrivee(this.heureArrivee);
         resultat.setPoint(this.point);
+        resultat.setClassement(this.classement);
         return resultat;
     }
 
