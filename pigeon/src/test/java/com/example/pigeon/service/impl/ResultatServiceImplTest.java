@@ -63,7 +63,7 @@ class ResultatServiceImplTest {
         pigeon.setId("pigeonId");
         pigeon.setNumeroBague("M123");
 
-        resultat = new Resultat("competitionId", "pigeonId", 0, 0, null, LocalDateTime.now(), 0);
+        resultat = new Resultat("competitionId", "pigeonId", 0, 0, null, LocalDateTime.now(), 0,0);
         resultatDto = ResultatDto.builder()
                 .competitionId("competitionId")
                 .pigeonId("pigeonId")
@@ -115,7 +115,7 @@ class ResultatServiceImplTest {
     }
     @Test
     void testUploadResultsFile() throws IOException {
-        // Create a sample Excel file
+
         XSSFWorkbook workbook = new XSSFWorkbook();
         var sheet = workbook.createSheet("Sheet1");
         var headerRow = sheet.createRow(0);

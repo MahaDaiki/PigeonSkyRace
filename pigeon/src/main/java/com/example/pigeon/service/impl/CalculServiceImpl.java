@@ -28,7 +28,7 @@ import com.example.pigeon.service.CalculService;
 public class CalculServiceImpl implements CalculService {
 
     private static final double EARTH_RADIUS = 6371000;
-    private static final double DEFAULT_ADMISSION_PERCENTAGE = 0.25;
+    public static final double DEFAULT_ADMISSION_PERCENTAGE = 0.25;
 
     @Autowired
     private ResultatRepository resultatRepository;
@@ -101,6 +101,7 @@ public class CalculServiceImpl implements CalculService {
         }
     }
 
+
     private void generatePdf(List<Resultat> resultats, String outputPath) {
         try (PdfWriter writer = new PdfWriter(outputPath);
              PdfDocument pdf = new PdfDocument(writer);
@@ -144,7 +145,9 @@ public class CalculServiceImpl implements CalculService {
     }
 
 
-    private double calculerDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
+
+    public double calculerDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
+
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -154,7 +157,7 @@ public class CalculServiceImpl implements CalculService {
         return EARTH_RADIUS * c;
     }
 
-    private double calculerVitesse(double distance, Duration duree) {
+    public double calculerVitesse(double distance, Duration duree) {
         double dureeEnMinutes = duree.toMinutes();
         return dureeEnMinutes > 0 ? (distance / dureeEnMinutes) : 0;
     }
