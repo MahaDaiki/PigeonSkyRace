@@ -3,9 +3,16 @@ package com.example.pigeon.service.impl;
 import java.time.Duration;
 import java.util.List;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Cell;
+
+import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pigeon.entity.Competition;
 import com.example.pigeon.entity.Resultat;
@@ -14,6 +21,8 @@ import com.example.pigeon.repository.CompetitionRepository;
 import com.example.pigeon.repository.ResultatRepository;
 import com.example.pigeon.repository.UtilisateurRepository;
 import com.example.pigeon.service.CalculService;
+
+
 
 @Service
 public class CalculServiceImpl implements CalculService {
@@ -83,6 +92,8 @@ public class CalculServiceImpl implements CalculService {
             competition.setEstTermine(true);
             competitionRepository.save(competition);
 
+            String outputPath = "PDF/resultat" + competitionId + ".pdf";
+            generatePdf(resultats, outputPath);
             return true;
         } catch (Exception e) {
             System.err.println("Erreur lors de la sauvegarde: " + e.getMessage());
@@ -90,7 +101,53 @@ public class CalculServiceImpl implements CalculService {
         }
     }
 
+
+    private void generatePdf(List<Resultat> resultats, String outputPath) {
+        try (PdfWriter writer = new PdfWriter(outputPath);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document document = new Document(pdf)) {
+
+            document.add(new Paragraph("Classement des Pigeons - Top 25%")
+                    .setFontSize(18)
+                    .setBold()
+                    .setMarginBottom(20));
+
+            float[] columnWidths = {1, 3, 3, 2, 2, 2};
+            Table table = new Table(columnWidths);
+            table.setWidth(UnitValue.createPercentValue(100));
+
+            table.addHeaderCell(new Cell().add(new Paragraph("Classement").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Pigeon ID").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Heure d'arrivée").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Distance (m)").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Vitesse (m/min)").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Points").setBold()));
+
+            resultats.stream()
+                    .filter(resultat -> resultat.getClassement() != 0)
+                    .forEach(resultat -> {
+                        table.addCell(new Cell().add(new Paragraph(String.valueOf(resultat.getClassement()))));
+                        table.addCell(new Cell().add(new Paragraph(resultat.getPigeonId())));
+                        table.addCell(new Cell().add(new Paragraph(resultat.getHeureArrivee().toString())));
+                        table.addCell(new Cell().add(new Paragraph(String.format("%.2f", resultat.getDistanceParcourue()))));
+                        table.addCell(new Cell().add(new Paragraph(String.format("%.2f", resultat.getVitesse()))));
+                        table.addCell(new Cell().add(new Paragraph(String.format("%.2f", resultat.getPoint()))));
+                    });
+
+            document.add(table);
+
+//            System.out.println("test");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la génération du PDF : " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Échec de la génération du PDF", e);
+        }
+    }
+
+
+
     public double calculerDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
+
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
