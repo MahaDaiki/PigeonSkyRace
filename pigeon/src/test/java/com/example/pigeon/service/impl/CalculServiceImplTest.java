@@ -3,12 +3,11 @@ package com.example.pigeon.service.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.example.pigeon.entity.Competition;
 import com.example.pigeon.entity.Pigeon;
@@ -21,13 +20,22 @@ import com.example.pigeon.repository.UtilisateurRepository;
 import com.example.pigeon.service.CalculService;
 
 import com.example.pigeon.service.PigeonService;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import org.apache.poi.ss.usermodel.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 @ExtendWith(MockitoExtension.class)
 class CalculServiceImplTest {
@@ -43,6 +51,17 @@ class CalculServiceImplTest {
     private PigeonRepository pigeonRepository;
     @Mock
     private UtilisateurRepository utilisateurRepository;
+
+    @Mock
+    private PdfWriter pdfWriter;
+
+    @Mock
+    private PdfDocument pdfDocument;
+
+    @Mock
+    private Document document;
+
+
 
     @InjectMocks
     private CalculServiceImpl calculService;
@@ -162,5 +181,59 @@ class CalculServiceImplTest {
         double vitesse = calculService.calculerVitesse(distance, duration);
         assertTrue(vitesse < 0, "Speed should be negative when distance is negative.");
     }
+    @Test
+    void testGeneratePdf_Failure() {
+        CalculServiceImpl calculService = new CalculServiceImpl();
+        List<Resultat> resultats = List.of();
 
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> calculService.generatePdf(resultats, "invalid/path/output.pdf"));
+
+        assertEquals("Échec de la génération du PDF", exception.getMessage());
+    }
+
+    @Test
+    public void testGeneratePdf() {
+
+        List<Resultat> mockResultats = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Resultat resultat = new Resultat();
+            resultat.setClassement(i);
+            resultat.setPigeonId("F" + i);
+            resultat.setHeureArrivee(LocalDateTime.now());
+            resultat.setDistanceParcourue(500.0 + i );
+            resultat.setVitesse(200.0 + i );
+            resultat.setPoint(100.0 - (i * 5));
+            mockResultats.add(resultat);
+        }
+
+        String outputPath = "test_resultats.pdf";
+
+        CalculServiceImpl calculService = new CalculServiceImpl();
+        calculService.generatePdf(mockResultats, outputPath);
+
+        File pdfFile = new File(outputPath);
+        assertTrue(pdfFile.exists(), "PDF file should exist after generation");
+
+        try (PdfReader reader = new PdfReader(outputPath);
+             PdfDocument pdfDocument = new PdfDocument(reader)) {
+            String textFromFirstPage = com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor.getTextFromPage(pdfDocument.getPage(1));
+            assertTrue(textFromFirstPage.contains("Classement des Pigeons"), "PDF content should contain the title");
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false, "Failed to read the generated PDF file");
+        }
+
+        try {
+            Files.deleteIfExists(pdfFile.toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+
+
+
+

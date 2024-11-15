@@ -102,7 +102,7 @@ public class CalculServiceImpl implements CalculService {
     }
 
 
-    private void generatePdf(List<Resultat> resultats, String outputPath) {
+    public void generatePdf(List<Resultat> resultats, String outputPath) {
         try (PdfWriter writer = new PdfWriter(outputPath);
              PdfDocument pdf = new PdfDocument(writer);
              Document document = new Document(pdf)) {
